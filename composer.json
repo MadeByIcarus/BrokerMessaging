@@ -1,0 +1,48 @@
+{
+  "name": "icarus/broker-messaging",
+  "type": "library",
+  "license": "BSD-3-Clause",
+  "description": "A database-layer for sending and receiving RabbitMQ messages.",
+  "keywords": [
+    "nette",
+    "Custom",
+    "RabbitMQ",
+    "doctrine2"
+  ],
+  "authors": [
+    {
+      "name": "Pavel Gajdoš",
+      "email": "info@pavelgajdos.cz"
+    },
+    {
+      "name": "Icarus s.r.o",
+      "homepage": "http://icarus.cz"
+    }
+  ],
+  "require": {
+    "php": ">=7.3",
+    "nettrine/orm": "^0.5",
+    "icarus/doctrine-helpers": "dev-master",
+    "icarus/rabbit-mq": "dev-master"
+  },
+  "require-dev": {
+    "nette/tester": "^2.2"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "config": {
+    "platform": {
+      "php": "7.3"
+    }
+  },
+  "autoload": {
+    "psr-4": {
+      "Icarus\\BrokerMessaging\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "IcarusTests\\": "tests/"
+    }
+  }
+}
