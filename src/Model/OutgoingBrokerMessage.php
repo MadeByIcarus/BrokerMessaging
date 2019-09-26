@@ -10,6 +10,7 @@ use Icarus\DoctrineHelpers\Entities\Attributes\BigIdentifier;
 
 /**
  * @ORM\Entity
+ * @ORM\Table(name="broker_message_outgoing")
  */
 class OutgoingBrokerMessage
 {

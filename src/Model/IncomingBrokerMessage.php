@@ -11,6 +11,7 @@ use Icarus\RabbitMQ\Messages\JsonMessage;
 
 /**
  * @ORM\Entity
+ * @ORM\Table(name="broker_message_incoming")
  */
 class IncomingBrokerMessage
 {
