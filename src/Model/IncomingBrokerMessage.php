@@ -48,6 +48,18 @@ class IncomingBrokerMessage
      */
     private $processedAt;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     * @var \DateTime|null
+     */
+    private $processingFailedAt;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     * @var string|null
+     */
+    private $errorMessage;
+
 
 
     public function __construct(string $message)

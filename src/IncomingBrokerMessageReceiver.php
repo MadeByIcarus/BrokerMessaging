@@ -17,6 +17,8 @@ class IncomingBrokerMessageReceiver
      */
     private $entityManager;
 
+    public $messageSavedCallback;
+
 
 
     public function __construct(EntityManagerDecorator $entityManager)
@@ -32,5 +34,9 @@ class IncomingBrokerMessageReceiver
         $this->entityManager->persist($message);
 
         $doFlush && $this->entityManager->flush();
+
+        if (is_callable($this->messageSavedCallback)) {
+            call_user_func($this->messageSavedCallback, $message);
+        }
     }
 }

@@ -41,6 +41,8 @@ class OutgoingBrokerMessageQueue implements IConfirmHandler
         $brokerMessage = new OutgoingBrokerMessage($producerName, (string)$jsonMessage);
         $this->entityManager->persist($brokerMessage);
         $doFlush && $this->entityManager->flush();
+
+        $this->publishQueuedMessages(1);
     }
 
 
