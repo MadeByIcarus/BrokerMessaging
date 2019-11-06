@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace Icarus\BrokerMessaging\DI;
 
 
+use Icarus\BrokerMessaging\Console\Commands\PublishCommand;
 use Icarus\BrokerMessaging\IncomingBrokerMessageReceiver;
 use Icarus\BrokerMessaging\OutgoingBrokerMessageQueue;
-use Icarus\RabbitMQ\Command\PublishCommand;
 use Nette\DI\CompilerExtension;
 use Nettrine\ORM\DI\Traits\TEntityMapping;
 
