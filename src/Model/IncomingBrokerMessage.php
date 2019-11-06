@@ -148,4 +148,43 @@ class IncomingBrokerMessage
         return $this->errorMessage;
     }
 
+
+
+    /**
+     * @param string $message
+     */
+    public function setMessage($message)
+    {
+        $this->message = $message;
+    }
+
+
+
+    /**
+     * @param \DateTime|null $processedAt
+     */
+    public function setProcessedAt($processedAt)
+    {
+        $this->processedAt = $processedAt;
+    }
+
+
+
+    /**
+     * @param \DateTime|null $processingFailedAt
+     */
+    public function setProcessingFailedAt($processingFailedAt)
+    {
+        $this->processingFailedAt = $processingFailedAt;
+    }
+
+
+
+    /**
+     * @param string|null $errorMessage
+     */
+    public function setErrorMessage($errorMessage)
+    {
+        $this->errorMessage = $errorMessage;
+    }
 }
