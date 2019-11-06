@@ -1,6 +1,6 @@
 <?php
 
-namespace Icarus\RabbitMQ\Command;
+namespace Icarus\BrokerMessaging\Console\Commands;
 
 
 use Icarus\BrokerMessaging\OutgoingBrokerMessageQueue;
