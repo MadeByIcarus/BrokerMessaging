@@ -78,4 +78,74 @@ class IncomingBrokerMessage
         $this->type = $message->getType();
     }
 
+
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getOriginId()
+    {
+        return $this->originId;
+    }
+
+
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+
+
+    /**
+     * @return string
+     */
+    public function getMessage()
+    {
+        return $this->message;
+    }
+
+
+
+    /**
+     * @return \DateTime|null
+     */
+    public function getProcessedAt()
+    {
+        return $this->processedAt;
+    }
+
+
+
+    /**
+     * @return \DateTime|null
+     */
+    public function getProcessingFailedAt()
+    {
+        return $this->processingFailedAt;
+    }
+
+
+
+    /**
+     * @return string|null
+     */
+    public function getErrorMessage()
+    {
+        return $this->errorMessage;
+    }
+
 }
