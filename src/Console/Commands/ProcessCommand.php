@@ -3,7 +3,7 @@
 namespace Icarus\BrokerMessaging\Console\Commands;
 
 
-use Icarus\BrokerMessaging\IncomingBrokerMessageReceiver;
+use Icarus\BrokerMessaging\IncomingBrokerMessageProcessor;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -16,17 +16,17 @@ class ProcessCommand extends Command
     protected static $defaultName = 'broker-messaging:process';
 
     /**
-     * @var IncomingBrokerMessageReceiver
+     * @var IncomingBrokerMessageProcessor
      */
-    private $incomingBrokerMessageReceiver;
+    private $incomingBrokerMessageProcessor;
 
 
 
-    public function __construct(IncomingBrokerMessageReceiver $incomingBrokerMessageReceiver)
+    public function __construct(IncomingBrokerMessageProcessor $incomingBrokerMessageProcessor)
     {
         parent::__construct();
 
-        $this->incomingBrokerMessageReceiver = $incomingBrokerMessageReceiver;
+        $this->incomingBrokerMessageProcessor = $incomingBrokerMessageProcessor;
     }
 
 
@@ -55,7 +55,7 @@ class ProcessCommand extends Command
             $output->writeln("Processing batch...");
             $output->writeln("");
 
-            foreach ($this->incomingBrokerMessageReceiver->process() as $msg) {
+            foreach ($this->incomingBrokerMessageProcessor->processIncomingQueue() as $msg) {
                 $output->writeln($msg);
             }
 

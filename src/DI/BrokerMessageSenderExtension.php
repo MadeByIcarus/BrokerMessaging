@@ -6,7 +6,7 @@ namespace Icarus\BrokerMessaging\DI;
 
 use Icarus\BrokerMessaging\Console\Commands\ProcessCommand;
 use Icarus\BrokerMessaging\Console\Commands\PublishCommand;
-use Icarus\BrokerMessaging\IncomingBrokerMessageReceiver;
+use Icarus\BrokerMessaging\IncomingBrokerMessageProcessor;
 use Icarus\BrokerMessaging\OutgoingBrokerMessageQueue;
 use Nette\DI\CompilerExtension;
 use Nettrine\ORM\DI\Traits\TEntityMapping;
@@ -29,7 +29,7 @@ class BrokerMessageSenderExtension extends CompilerExtension
             ->setFactory(OutgoingBrokerMessageQueue::class);
 
         $builder->addDefinition($this->prefix('brokerMessageReceiver'))
-            ->setFactory(IncomingBrokerMessageReceiver::class);
+            ->setFactory(IncomingBrokerMessageProcessor::class);
 
         $builder->addDefinition($this->prefix('publishCommand'))
             ->setFactory(PublishCommand::class);
