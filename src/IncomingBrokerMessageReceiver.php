@@ -48,8 +48,7 @@ class IncomingBrokerMessageReceiver
     public function process()
     {
         if (!$this->incomingMessageProcessor) {
-            yield "Missing a class implementing the " . IIncomingMessageProcessor::class . " interface. Have you registered it in the configuration file?";
-            return;
+            throw new MissingIncomingMessageProcessorClassException();
         }
 
         $messages = $this->entityManager->createQueryBuilder()
