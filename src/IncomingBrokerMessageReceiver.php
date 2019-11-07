@@ -17,13 +17,20 @@ class IncomingBrokerMessageReceiver
      */
     private $entityManager;
 
-    public $messageSavedCallback;
+    /**
+     * @var IIncomingMessageProcessor
+     */
+    private $incomingMessageProcessor;
 
 
 
-    public function __construct(EntityManagerDecorator $entityManager)
+    public function __construct(
+        EntityManagerDecorator $entityManager,
+        IIncomingMessageProcessor $incomingMessageProcessor = null
+    )
     {
         $this->entityManager = $entityManager;
+        $this->incomingMessageProcessor = $incomingMessageProcessor;
     }
 
 
@@ -34,9 +41,31 @@ class IncomingBrokerMessageReceiver
         $this->entityManager->persist($message);
 
         $doFlush && $this->entityManager->flush();
-
-        if (is_callable($this->messageSavedCallback)) {
-            call_user_func($this->messageSavedCallback, $message);
-        }
     }
+
+
+
+    public function process()
+    {
+        if (!$this->incomingMessageProcessor) {
+            yield "Missing a class implementing the " . IIncomingMessageProcessor::class . " interface. Have you registered it in the configuration file?";
+            return;
+        }
+
+        $messages = $this->entityManager->createQueryBuilder()
+            ->select("m")
+            ->from(IncomingBrokerMessage::class, "m")
+            ->where("m.processedAt IS NULL")
+            ->setMaxResults(50)
+            ->getQuery()
+            ->getResult();
+
+        foreach ($messages as $message) {
+            yield "Processing " . $message->getId();
+            $this->incomingMessageProcessor->process($message);
+        }
+
+        yield "Finished.";
+    }
+
 }

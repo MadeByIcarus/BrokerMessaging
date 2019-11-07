@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Icarus\BrokerMessaging\DI;
 
 
+use Icarus\BrokerMessaging\Console\Commands\ProcessCommand;
 use Icarus\BrokerMessaging\Console\Commands\PublishCommand;
 use Icarus\BrokerMessaging\IncomingBrokerMessageReceiver;
 use Icarus\BrokerMessaging\OutgoingBrokerMessageQueue;
@@ -32,6 +33,9 @@ class BrokerMessageSenderExtension extends CompilerExtension
 
         $builder->addDefinition($this->prefix('publishCommand'))
             ->setFactory(PublishCommand::class);
+
+        $builder->addDefinition($this->prefix('processCommand'))
+            ->setFactory(ProcessCommand::class);
 
         $this->setEntityMappings($this->getEntityMappings());
     }

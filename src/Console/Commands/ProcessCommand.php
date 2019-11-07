@@ -3,30 +3,30 @@
 namespace Icarus\BrokerMessaging\Console\Commands;
 
 
-use Icarus\BrokerMessaging\OutgoingBrokerMessageQueue;
+use Icarus\BrokerMessaging\IncomingBrokerMessageReceiver;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 
-class PublishCommand extends Command
+class ProcessCommand extends Command
 {
 
-    protected static $defaultName = 'broker-messaging:publish';
+    protected static $defaultName = 'broker-messaging:process';
 
     /**
-     * @var OutgoingBrokerMessageQueue
+     * @var IncomingBrokerMessageReceiver
      */
-    private $outgoingBrokerMessageQueue;
+    private $incomingBrokerMessageReceiver;
 
 
 
-    public function __construct(OutgoingBrokerMessageQueue $outgoingBrokerMessageQueue)
+    public function __construct(IncomingBrokerMessageReceiver $incomingBrokerMessageReceiver)
     {
         parent::__construct();
 
-        $this->outgoingBrokerMessageQueue = $outgoingBrokerMessageQueue;
+        $this->incomingBrokerMessageReceiver = $incomingBrokerMessageReceiver;
     }
 
 
@@ -50,10 +50,16 @@ class PublishCommand extends Command
         $start = time();
         $secondsToRun = $input->getOption("executionTime");
         $sleepTime = $input->getOption("sleepTime");
+
         do {
-            $output->writeln("Publishing batch...");
-            $this->outgoingBrokerMessageQueue->publishQueuedMessages();
-            $output->writeln("Sleeping...");
+            $output->writeln("Processing batch...");
+            $output->writeln("");
+
+            foreach ($this->incomingBrokerMessageReceiver->process() as $msg) {
+                $output->writeln($msg);
+            }
+
+            $output->writeln("Sleeping for " . $sleepTime . "s...");
             sleep($sleepTime);
             $output->writeln("");
         } while ($secondsToRun > (time() - $start));

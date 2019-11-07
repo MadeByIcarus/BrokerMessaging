@@ -41,8 +41,6 @@ class OutgoingBrokerMessageQueue implements IConfirmHandler
         $brokerMessage = new OutgoingBrokerMessage($producerName, (string)$jsonMessage);
         $this->entityManager->persist($brokerMessage);
         $doFlush && $this->entityManager->flush();
-
-        $this->publishQueuedMessages(1);
     }
 
 
@@ -56,7 +54,11 @@ class OutgoingBrokerMessageQueue implements IConfirmHandler
         $producers = [];
 
         foreach ($queuedMessages as $brokerMessage) {
-            $producers[] = $producer = $this->rabbitMQ->getProducer($brokerMessage->getProducerName());
+            $name = $brokerMessage->getProducerName();
+            if (!isset($producers[$name])) {
+                $producers[$name] = $this->rabbitMQ->getProducer($brokerMessage->getProducerName());
+            }
+            $producer = $producers[$name];
 
             $jsonMessage = JsonMessage::fromJson($brokerMessage->getMessage());
             $jsonMessage->setMsgId($brokerMessage->getId());
@@ -70,6 +72,7 @@ class OutgoingBrokerMessageQueue implements IConfirmHandler
         }
 
         $this->entityManager->flush();
+        $this->entityManager->clear();
 
         foreach ($producers as $producer) {
             $producer->publishBatch();
