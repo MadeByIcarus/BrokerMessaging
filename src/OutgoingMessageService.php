@@ -49,7 +49,7 @@ class OutgoingMessageService implements IMessageConfirmationHandler
     {
         /** @var OutgoingBrokerMessage[] $queuedMessages */
         $queuedMessages = $this->entityManager->getRepository(OutgoingBrokerMessage::class)
-            ->findBy(['waitingForAck' => false], [], $limit);
+            ->findBy(['waitingForAck' => false, 'ack' => false], [], $limit);
 
         $producers = [];
 
