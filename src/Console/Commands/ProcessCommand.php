@@ -55,7 +55,7 @@ class ProcessCommand extends Command
             $output->writeln("Processing batch...");
             $output->writeln("");
 
-            foreach ($this->incomingBrokerMessageProcessor->processIncomingQueue() as $msg) {
+            foreach ($this->incomingBrokerMessageProcessor->processMessages() as $msg) {
                 $output->writeln($msg);
             }
 
