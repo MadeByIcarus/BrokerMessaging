@@ -3,7 +3,7 @@
 namespace Icarus\BrokerMessaging\Console\Commands;
 
 
-use Icarus\BrokerMessaging\IncomingBrokerMessageProcessor;
+use Icarus\BrokerMessaging\IncomingMessageService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -16,13 +16,13 @@ class ProcessCommand extends Command
     protected static $defaultName = 'broker-messaging:process';
 
     /**
-     * @var IncomingBrokerMessageProcessor
+     * @var IncomingMessageService
      */
     private $incomingBrokerMessageProcessor;
 
 
 
-    public function __construct(IncomingBrokerMessageProcessor $incomingBrokerMessageProcessor)
+    public function __construct(IncomingMessageService $incomingBrokerMessageProcessor)
     {
         parent::__construct();
 

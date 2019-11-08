@@ -108,6 +108,7 @@ class OutgoingBrokerMessage
     public function setAck(bool $ack): void
     {
         $this->ack = $ack;
+        $this->setWaitingForAck(false);
     }
 
 

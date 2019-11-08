@@ -3,7 +3,7 @@
 namespace Icarus\BrokerMessaging\Console\Commands;
 
 
-use Icarus\BrokerMessaging\OutgoingBrokerMessageQueue;
+use Icarus\BrokerMessaging\OutgoingMessageService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -16,13 +16,13 @@ class PublishCommand extends Command
     protected static $defaultName = 'broker-messaging:publish';
 
     /**
-     * @var OutgoingBrokerMessageQueue
+     * @var OutgoingMessageService
      */
     private $outgoingBrokerMessageQueue;
 
 
 
-    public function __construct(OutgoingBrokerMessageQueue $outgoingBrokerMessageQueue)
+    public function __construct(OutgoingMessageService $outgoingBrokerMessageQueue)
     {
         parent::__construct();
 

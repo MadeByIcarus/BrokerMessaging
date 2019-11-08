@@ -7,8 +7,8 @@ namespace Icarus\BrokerMessaging;
 use Icarus\BrokerMessaging\Model\IncomingBrokerMessage;
 
 
-interface IIncomingMessageProcessingBehavior
+interface IIncomingMessageProcessor
 {
 
-    public function apply(IncomingBrokerMessage $incomingBrokerMessage);
+    public function process(IncomingBrokerMessage $incomingBrokerMessage);
 }

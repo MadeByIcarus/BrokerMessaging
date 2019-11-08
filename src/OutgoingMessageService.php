@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace Icarus\BrokerMessaging;
 
 
-use Icarus\RabbitMQ\IConfirmHandler;
 use Icarus\BrokerMessaging\Model\OutgoingBrokerMessage;
+use Icarus\RabbitMQ\IMessageConfirmationHandler;
 use Icarus\RabbitMQ\Messages\AMQPMessageFactory;
 use Icarus\RabbitMQ\Messages\JsonMessage;
 use Icarus\RabbitMQ\RabbitMQ;
@@ -13,7 +13,7 @@ use Nettrine\ORM\EntityManagerDecorator;
 use PhpAmqpLib\Message\AMQPMessage;
 
 
-class OutgoingBrokerMessageQueue implements IConfirmHandler
+class OutgoingMessageService implements IMessageConfirmationHandler
 {
 
     /**
@@ -102,23 +102,24 @@ class OutgoingBrokerMessageQueue implements IConfirmHandler
 
 
 
-    // IConfirmHandler methods
+    /* IMessageConfirmationHandler methods */
+
 
     public function handleAck(AMQPMessage $message)
     {
-        $this->processAMQPMessage($message, true);
+        $this->processMessageConfirmation($message, true);
     }
 
 
 
     public function handleNack(AMQPMessage $message)
     {
-        $this->processAMQPMessage($message, false);
+        $this->processMessageConfirmation($message, false);
     }
 
 
 
-    private function processAMQPMessage(AMQPMessage $AMQPMessage, bool $isAck)
+    private function processMessageConfirmation(AMQPMessage $AMQPMessage, bool $isAck)
     {
         $jsonMessage = JsonMessage::fromJson($AMQPMessage->getBody());
         $id = $jsonMessage->getMsgId();

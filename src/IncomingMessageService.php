@@ -5,14 +5,14 @@ namespace Icarus\BrokerMessaging;
 
 
 use Icarus\BrokerMessaging\Model\IncomingBrokerMessage;
-use Icarus\RabbitMQ\IAMQPMessageProcessor;
 use Icarus\RabbitMQ\IConsumer;
+use Icarus\RabbitMQ\IIncomingMessageHandler;
 use Nettrine\ORM\EntityManagerDecorator;
 use PhpAmqpLib\Message\AMQPMessage;
 use Tracy\Debugger;
 
 
-class IncomingBrokerMessageProcessor implements IAMQPMessageProcessor
+class IncomingMessageService implements IIncomingMessageHandler
 {
 
     /**
@@ -21,24 +21,24 @@ class IncomingBrokerMessageProcessor implements IAMQPMessageProcessor
     private $entityManager;
 
     /**
-     * @var IIncomingMessageProcessingBehavior
+     * @var IIncomingMessageProcessor
      */
-    private $incomingMessageProcessingBehavior;
+    private $incomingMessageProcessor;
 
 
 
     public function __construct(
         EntityManagerDecorator $entityManager,
-        IIncomingMessageProcessingBehavior $incomingMessageProcessingBehavior = null
+        IIncomingMessageProcessor $incomingMessageProcessor = null
     )
     {
         $this->entityManager = $entityManager;
-        $this->incomingMessageProcessingBehavior = $incomingMessageProcessingBehavior;
+        $this->incomingMessageProcessor = $incomingMessageProcessor;
     }
 
 
 
-    public function process(AMQPMessage $message): int
+    public function handle(AMQPMessage $message): int
     {
         try {
             $brokerMessage = new IncomingBrokerMessage($message->getBody());
@@ -53,10 +53,10 @@ class IncomingBrokerMessageProcessor implements IAMQPMessageProcessor
 
 
 
-    public function processIncomingQueue()
+    public function processMessages()
     {
-        if (!$this->incomingMessageProcessingBehavior) {
-            throw new MissingIncomingMessageProcessingBehaviorClassException();
+        if (!$this->incomingMessageProcessor) {
+            throw new MissingIncomingMessageProcessorException();
         }
 
         $messages = $this->entityManager->createQueryBuilder()
@@ -69,7 +69,7 @@ class IncomingBrokerMessageProcessor implements IAMQPMessageProcessor
 
         foreach ($messages as $message) {
             yield "Processing " . $message->getId();
-            $this->incomingMessageProcessingBehavior->apply($message);
+            $this->incomingMessageProcessor->process($message);
         }
 
         yield "Finished.";
