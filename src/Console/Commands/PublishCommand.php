@@ -50,17 +50,22 @@ class PublishCommand extends Command
         $start = time();
         $secondsToRun = $input->getOption("executionTime");
         $sleepTime = $input->getOption("sleepTime");
+
+        $output->writeln("Started at $start");
         do {
             $output->writeln("Publishing batch...");
             $this->outgoingBrokerMessageQueue->publishQueuedMessages();
 
-            if ((time() - $start + $sleepTime) < $secondsToRun) {
-                $output->writeln("Sleeping for " . $sleepTime . "s...");
-                sleep($sleepTime);
+            if ((time() - $start + $sleepTime) > $secondsToRun) {
+                break;
             }
+
+            $output->writeln("Sleeping for " . $sleepTime . "s...");
+            sleep($sleepTime);
 
             $output->writeln("");
         } while ($secondsToRun > (time() - $start));
+        $output->writeln("Finished at ". time());
         return 0;
     }
 

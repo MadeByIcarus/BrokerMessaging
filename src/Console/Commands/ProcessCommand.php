@@ -51,6 +51,7 @@ class ProcessCommand extends Command
         $secondsToRun = $input->getOption("executionTime");
         $sleepTime = $input->getOption("sleepTime");
 
+        $output->writeln("Started at $start");
         do {
             $output->writeln("Processing batch...");
             $output->writeln("");
@@ -59,13 +60,15 @@ class ProcessCommand extends Command
                 $output->writeln($msg);
             }
 
-            if ((time() - $start + $sleepTime) < $secondsToRun) {
-                $output->writeln("Sleeping for " . $sleepTime . "s...");
-                sleep($sleepTime);
+            if ((time() - $start + $sleepTime) > $secondsToRun) {
+                break;
             }
 
+            $output->writeln("Sleeping for " . $sleepTime . "s...");
+            sleep($sleepTime);
             $output->writeln("");
         } while ($secondsToRun > (time() - $start));
+        $output->writeln("Finished at ". time());
         return 0;
     }
 
