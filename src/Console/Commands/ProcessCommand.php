@@ -59,8 +59,11 @@ class ProcessCommand extends Command
                 $output->writeln($msg);
             }
 
-            $output->writeln("Sleeping for " . $sleepTime . "s...");
-            sleep($sleepTime);
+            if ((time() - $start + $sleepTime) < $secondsToRun) {
+                $output->writeln("Sleeping for " . $sleepTime . "s...");
+                sleep($sleepTime);
+            }
+
             $output->writeln("");
         } while ($secondsToRun > (time() - $start));
         return 0;
