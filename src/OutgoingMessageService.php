@@ -9,6 +9,7 @@ use Icarus\RabbitMQ\IMessageConfirmationHandler;
 use Icarus\RabbitMQ\Messages\AMQPMessageFactory;
 use Icarus\RabbitMQ\Messages\JsonMessage;
 use Icarus\RabbitMQ\RabbitMQ;
+use Nette\Utils\JsonException;
 use Nettrine\ORM\EntityManagerDecorator;
 use PhpAmqpLib\Message\AMQPMessage;
 
@@ -121,11 +122,22 @@ class OutgoingMessageService implements IMessageConfirmationHandler
 
     private function processMessageConfirmation(AMQPMessage $AMQPMessage, bool $isAck)
     {
-        $jsonMessage = JsonMessage::fromJson($AMQPMessage->getBody());
+        try {
+            $jsonMessage = JsonMessage::fromJson($AMQPMessage->getBody());
+        } catch (JsonException $e) { // probably a testing message
+            echo $isAck ? "ACK" : "NACK";
+            return;
+        }
+
         $id = $jsonMessage->getMsgId();
 
         /** @var OutgoingBrokerMessage $brokerMessage */
         $brokerMessage = $this->entityManager->find(OutgoingBrokerMessage::class, $id);
+
+        if (!$brokerMessage) {
+            return;
+        }
+
         if ($isAck) {
             $brokerMessage->setAck(true);
         } else {
