@@ -6,6 +6,7 @@ namespace Icarus\BrokerMessaging\Model;
 
 use Doctrine\ORM\Mapping as ORM;
 use Icarus\DoctrineHelpers\Entities\Attributes\BigIdentifier;
+use Icarus\RabbitMQ\Messages\JsonMessage;
 
 
 /**
@@ -28,6 +29,12 @@ class OutgoingBrokerMessage
      * @var string
      */
     private $producerName;
+
+    /**
+     * @ORM\Column(type="string")
+     * @var string
+     */
+    private $type;
 
     /**
      * @ORM\Column(type="text")
@@ -60,6 +67,15 @@ class OutgoingBrokerMessage
         $this->createdAt = new \DateTime();
         $this->producerName = $producerName;
         $this->message = $message;
+        $this->extractRelevantValues($message);
+    }
+
+
+
+    private function extractRelevantValues(string $json)
+    {
+        $message = JsonMessage::fromJson($json);
+        $this->type = $message->getType();
     }
 
 
